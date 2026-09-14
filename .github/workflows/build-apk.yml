@@ -11,16 +11,17 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: 20
-          cache: 'npm'
+          node-version: 22          # 从 20 升级到 22（LTS），避免 Node 20 废弃警告
+          # 不使用 cache，因为仓库目前没有 package-lock.json（只有 bun.lock）
+          # 如果以后生成了 package-lock.json，可以改成 cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci || npm install
+        run: npm install            # 改成 npm install（没有 lock 文件时 npm ci 会报警告）
 
       - name: Build Web App
         run: npm run build
