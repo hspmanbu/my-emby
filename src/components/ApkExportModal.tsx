@@ -260,28 +260,32 @@ export const ApkExportModal: React.FC<ApkExportModalProps> = ({ isOpen, onClose 
             </div>
           )}
 
-          {/* Tab 3: Android Studio & Capacitor CLI */}
+          {/* Tab 3: GitHub Actions & Capacitor CLI */}
           {activeTab === 'cli' && (
             <div className="space-y-4">
-              <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-200 text-xs leading-relaxed space-y-1.5">
+              <div className="p-4 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-200 text-xs leading-relaxed space-y-2">
                 <div className="flex items-center gap-2 font-bold text-purple-400 text-sm">
                   <Terminal className="w-4 h-4" />
-                  <span>离线打包：Capacitor & Android Studio</span>
+                  <span>GitHub Actions 自动编译与离线打包</span>
                 </div>
                 <p>
-                  如果您拥有 Android Studio 或需要在自己的电脑 / 服务器上编译签名的独立 APK 文件，可使用 Capacitor 将本 Web 项目快速封装为原生 Android 工程：
+                  已在项目中生成完整的 <strong>.github/workflows/build-apk.yml</strong> 工作流文件，并完成了 <strong>Java 21、Gradle 8.14 与 Android SDK 35</strong> 适配，已彻底修复版本不匹配报错！
                 </p>
+                <div className="text-[11px] text-neutral-300 space-y-1">
+                  <div className="font-semibold text-emerald-400">CI 报错排查与修复点：</div>
+                  <div>• <strong>Java 版本升级至 21</strong>：Capacitor 8 / AGP 8.13 严格要求 JDK 21，此前 Java 17 会导致 Gradle 报错。</div>
+                  <div>• <strong>补齐 package-lock.json</strong>：避免 setup-node 报 lockfile 缺失错误。</div>
+                  <div>• <strong>SDK 统一指定至 API 35 (Android 15)</strong>：完美兼容 GitHub Actions Ubuntu Runner 预装组件。</div>
+                  <div>• <strong>集成 setup-gradle 官方加速组件</strong>：自动缓存 Gradle 构件并自动同意 SDK 许可协议。</div>
+                </div>
               </div>
 
               <div className="p-4 rounded-2xl bg-black/60 border border-white/10 font-mono text-[11px] text-neutral-300 space-y-2">
-                <div className="text-neutral-500"># 1. 导出或克隆项目代码到本地电脑</div>
-                <div className="text-emerald-400">git clone &lt;repo-url&gt; &amp;&amp; npm install</div>
-                <div className="text-neutral-500 mt-2"># 2. 安装 Capacitor 原生包装器</div>
-                <div className="text-emerald-400">npm install @capacitor/core @capacitor/cli @capacitor/android</div>
-                <div className="text-neutral-500 mt-2"># 3. 初始化 Android 平台工程</div>
-                <div className="text-emerald-400">npx cap init "Yamby Web" "com.yamby.web" --web-dir dist</div>
-                <div className="text-emerald-400">npm run build &amp;&amp; npx cap add android</div>
-                <div className="text-neutral-500 mt-2"># 4. 在 Android Studio 打开并编译出 release-unsigned.apk</div>
+                <div className="text-neutral-500 font-sans font-semibold text-white">方式 A：GitHub 一键触发编译（无需本地装环境）</div>
+                <div className="text-neutral-400">将代码推送至 GitHub 仓库后，进入仓库顶部的 <span className="text-emerald-400">Actions</span> 标签页，点击 <span className="text-emerald-400">Build Android APK</span> 并在右侧点击 <span className="text-emerald-400">Run workflow</span>，约 2-3 分钟即可在 Artifacts 中下载编译好的 <span className="text-emerald-300 font-bold">Yamby-Emby-Client-Debug-APK.zip</span>。</div>
+
+                <div className="text-neutral-500 font-sans font-semibold text-white pt-2">方式 B：本地 Android Studio 编译</div>
+                <div className="text-emerald-400">npm run build &amp;&amp; npx cap sync android</div>
                 <div className="text-emerald-400">npx cap open android</div>
               </div>
             </div>

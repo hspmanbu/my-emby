@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Yamby</string>
+    <string name="title_activity_main">Yamby</string>
+    <string name="package_name">com.yamby.embyclient</string>
+    <string name="custom_url_scheme">com.yamby.embyclient</string>
+</resources>

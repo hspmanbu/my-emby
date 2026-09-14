@@ -11,45 +11,48 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@v4
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: 22          # 从 20 升级到 22（LTS），避免 Node 20 废弃警告
-          # 不使用 cache，因为仓库目前没有 package-lock.json（只有 bun.lock）
-          # 如果以后生成了 package-lock.json，可以改成 cache: 'npm'
-
-      - name: Install dependencies
-        run: npm install            # 改成 npm install（没有 lock 文件时 npm ci 会报警告）
-
-      - name: Build Web App
-        run: npm run build
-
-      - name: Set up Java 17
+      - name: Set up Java 21
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          distribution: 'temurin'
+          java-version: '21'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
 
-      - name: Add Capacitor Android Platform
+      - name: Install dependencies
         run: |
-          npm install @capacitor/core @capacitor/cli @capacitor/android
-          npx cap add android || true
-          npx cap copy android
-          npx cap update android
+          npm install
+
+      - name: Build Web App
+        run: |
+          npm run build
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Accept Android SDK Licenses & Sync
+        env:
+          ANDROID_HOME: /usr/local/lib/android/sdk
+        run: |
+          yes | sdkmanager --licenses || true
+          npx cap sync android
 
       - name: Build Android APK with Gradle
         run: |
           cd android
+          sed -i -e 's/\r$//' gradlew
           chmod +x ./gradlew
-          ./gradlew assembleDebug --stacktrace
+          ./gradlew assembleDebug --stacktrace --no-daemon
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: Yamby-Emby-Client-Debug-APK
           path: android/app/build/outputs/apk/debug/*.apk
+          retention-days: 14
