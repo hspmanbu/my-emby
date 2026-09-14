@@ -1,0 +1,6 @@
+{
+  "name": "Yamby Web - Emby客户端",
+  "description": "仿照Yamby设计的Emby第三方媒体客户端，支持手势调节、动态端口自动更新与多媒体流播放。",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
